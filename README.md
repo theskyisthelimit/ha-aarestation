@@ -16,10 +16,12 @@ Die Karte holt ihre Daten direkt von der API (`https://aarestation.ch/api/dashbo
 ## Features
 
 - 🌈 Das bekannte **PAI-Score-Gauge** (1–10), pixelgenau wie auf aarestation.ch
+- 🕸️ **Radar / Spider** der 6 PAI-Faktoren (Lufttemperatur, Wind, UV, Aaretemperatur, Abfluss, Luftfeuchte)
+- 🔲 **Parameter-Kacheln** – jeder Wert (Wassertemp, Abfluss, Pegel, Wind, UV, AQI …) einzeln zuschaltbar
 - ☀️ **Beste Zeit heute** – Stunde mit dem höchsten PAI-Score des Tages
 - 🕐 Zeitpunkt der letzten Aktualisierung
-- ⚙️ Visueller Konfigurations-Editor
-- 🎨 Dunkles Aarestation-Design, Home-Assistant-Systemschrift
+- 👻 **Transparenter Modus** – fügt sich ohne Karten-Hintergrund ins Dashboard ein
+- ⚙️ Alles per **GUI-Editor** ein-/ausschaltbar
 
 ## Installation
 
@@ -45,23 +47,39 @@ Karte zum Dashboard hinzufügen (Karten-Picker → „Aarestation Card“) oder 
 
 ```yaml
 type: custom:aarestation-card
-update_interval: 300
+show_gauge: true
+show_radar: false
 show_best_time: true
 show_updated: true
+transparent: false
+tiles:
+  - aare_temp
+  - aareflow
+  - air_temp
+  - uv_index
 ```
 
 ## Konfigurationsoptionen
 
-| Option            | Typ     | Default                                  | Beschreibung                                            |
-| ----------------- | ------- | ---------------------------------------- | ------------------------------------------------------- |
-| `type`            | string  | –                                        | `custom:aarestation-card` (erforderlich)                |
-| `title`           | string  | – (kein Titel)                           | Optionale Überschrift über dem Gauge                    |
-| `update_interval` | number  | `300`                                    | Aktualisierungsintervall in Sekunden (min. `60`)        |
-| `show_best_time`  | boolean | `true`                                   | Pill „Beste Zeit heute“ anzeigen                        |
-| `show_updated`    | boolean | `true`                                   | Zeile „Aktualisiert HH:MM“ anzeigen                     |
-| `api_url`         | string  | `https://aarestation.ch/api/dashboard`   | API-Endpunkt (für Self-Hosting überschreibbar)          |
+Alles ist auch im **visuellen Editor** ein- und ausschaltbar.
 
-> Der Default von 300s ist bewusst sparsam gewählt. „Beste Zeit heute“ ist die Stunde mit dem höchsten prognostizierten PAI-Score des aktuellen Tages (Zeitzone Europe/Zurich).
+| Option            | Typ      | Default  | Beschreibung                                                   |
+| ----------------- | -------- | -------- | ------------------------------------------------------------- |
+| `type`            | string   | –        | `custom:aarestation-card` (erforderlich)                      |
+| `title`           | string   | –        | Optionale Überschrift                                          |
+| `update_interval` | number   | `300`    | Aktualisierungsintervall in Sekunden (min. `60`)              |
+| `show_gauge`      | boolean  | `true`   | PAI-Score-Gauge anzeigen                                       |
+| `show_radar`      | boolean  | `false`  | Radar/Spider der 6 PAI-Faktoren anzeigen                       |
+| `show_best_time`  | boolean  | `true`   | Pill „Beste Zeit heute“ anzeigen                               |
+| `show_updated`    | boolean  | `true`   | Zeile „Aktualisiert HH:MM“ anzeigen                            |
+| `transparent`     | boolean  | `false`  | Karten-Hintergrund transparent (ins Dashboard einfügen)       |
+| `tiles`           | string[] | `[]`     | Liste der Parameter-Kacheln (siehe unten)                     |
+
+### Verfügbare Kacheln (`tiles`)
+
+`aare_temp` (Aaretemperatur), `aareflow` (Abfluss), `aarelevel` (Pegel), `air_temp` (Lufttemperatur), `air_temp_feels` (Gefühlt), `wind_speed` (Wind), `humidity` (Luftfeuchte), `uv_index` (UV-Index), `air_pressure` (Luftdruck), `cloud_coverage` (Bewölkung), `rain_today` (Regen heute), `aqi` (Luftqualität).
+
+> „Beste Zeit heute“ ist die Stunde mit dem höchsten prognostizierten PAI-Score des aktuellen Tages (Zeitzone Europe/Zurich). Das Radar zeigt die PAI-Teil-Scores (0–10) je Faktor.
 
 ## Entwicklung
 

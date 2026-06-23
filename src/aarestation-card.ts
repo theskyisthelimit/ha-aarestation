@@ -1,9 +1,12 @@
 import { LitElement, html, nothing, type TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
 import type { AarestationCardConfig, BestTime, DashboardData, HomeAssistant } from "./types";
 import { bestTimeToday, fetchDashboard } from "./api";
 import { renderGauge, getColorFromScore } from "./gauge";
-import { sunIcon, clockIcon } from "./icons";
+import { renderRadar, radarValues } from "./radar";
+import { TILE_MAP } from "./tiles";
+import { sunIcon, clockIcon, tileIcon } from "./icons";
 import { cardStyles } from "./styles";
 import { t } from "./localize";
 import {
@@ -43,9 +46,12 @@ export class AarestationCard extends LitElement {
     }
     this._config = {
       update_interval: DEFAULT_UPDATE_INTERVAL,
+      transparent: false,
+      show_gauge: true,
       show_best_time: true,
       show_updated: true,
-      api_url: DEFAULT_API_URL,
+      show_radar: false,
+      tiles: [],
       ...config,
     };
     if (this.isConnected) {
@@ -86,8 +92,7 @@ export class AarestationCard extends LitElement {
 
   private async _load(): Promise<void> {
     try {
-      const url = this._config.api_url ?? DEFAULT_API_URL;
-      this._data = await fetchDashboard(url);
+      this._data = await fetchDashboard(DEFAULT_API_URL);
       this._error = false;
     } catch (_e) {
       this._error = true;
@@ -96,17 +101,51 @@ export class AarestationCard extends LitElement {
     }
   }
 
-  private _fmt(n: number): string {
-    return n.toLocaleString("de-CH", { minimumFractionDigits: 0, maximumFractionDigits: 1 });
+  private _fmt(n: number, decimals = 1): string {
+    return n.toLocaleString("de-CH", { minimumFractionDigits: 0, maximumFractionDigits: decimals });
+  }
+
+  private _renderTiles(d: DashboardData): TemplateResult | typeof nothing {
+    const keys = this._config.tiles ?? [];
+    if (!keys.length) {
+      return nothing;
+    }
+    const items = keys
+      .map((k) => TILE_MAP[k])
+      .filter((def): def is NonNullable<typeof def> => Boolean(def))
+      .map((def) => ({ def, value: def.get(d) }))
+      .filter((x) => typeof x.value === "number");
+
+    if (!items.length) {
+      return nothing;
+    }
+    return html`
+      <div class="tiles">
+        ${items.map(
+          ({ def, value }) => html`
+            <div class="tile">
+              <div class="tile-label"><span class="ico">${tileIcon(def.icon)}</span>${def.label}</div>
+              <div class="tile-value">
+                ${this._fmt(value as number, def.decimals)}${def.unit
+                  ? html`<span class="tile-unit">${def.unit}</span>`
+                  : nothing}
+              </div>
+            </div>
+          `
+        )}
+      </div>
+    `;
   }
 
   protected render(): TemplateResult {
     if (this._loading && !this._data) {
-      return html`<ha-card><div class="state">${t("laden")}</div></ha-card>`;
+      return html`<ha-card class=${classMap({ transparent: !!this._config.transparent })}>
+        <div class="state">${t("laden")}</div>
+      </ha-card>`;
     }
     if (this._error && !this._data) {
       return html`
-        <ha-card>
+        <ha-card class=${classMap({ transparent: !!this._config.transparent })}>
           <div class="state">
             ${t("ladefehler")}
             <div><button @click=${() => void this._load()}>${t("erneut_versuchen")}</button></div>
@@ -122,10 +161,10 @@ export class AarestationCard extends LitElement {
     const updated = d.pai?.system_info?.datetime;
 
     return html`
-      <ha-card>
+      <ha-card class=${classMap({ transparent: !!c.transparent })}>
         ${c.title ? html`<div class="title">${c.title}</div>` : nothing}
 
-        <div class="gauge">${renderGauge(score)}</div>
+        ${c.show_gauge ? html`<div class="gauge">${renderGauge(score)}</div>` : nothing}
 
         ${c.show_best_time && best
           ? html`
@@ -139,6 +178,10 @@ export class AarestationCard extends LitElement {
             `
           : nothing}
 
+        ${c.show_radar ? html`<div class="radar">${renderRadar(radarValues(d))}</div>` : nothing}
+
+        ${this._renderTiles(d)}
+
         ${c.show_updated && updated
           ? html`<div class="updated"><span class="ico">${clockIcon()}</span> ${t("aktualisiert")} ${updated}</div>`
           : nothing}
@@ -151,7 +194,7 @@ window.customCards = window.customCards ?? [];
 window.customCards.push({
   type: CARD_TYPE,
   name: "Aarestation Card",
-  description: "PAI-Score-Gauge der Aare (aarestation.ch) mit bester Badezeit heute.",
+  description: "PAI-Score-Gauge der Aare (aarestation.ch) mit Radar, Kacheln und bester Badezeit.",
   preview: true,
   documentationURL: "https://github.com/theskyisthelimit/ha-aarestation",
 });

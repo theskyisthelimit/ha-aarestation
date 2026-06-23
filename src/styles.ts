@@ -24,21 +24,33 @@ export const cardStyles = css`
     padding: 12px 16px 16px;
   }
 
+  /* Transparent mode: blend into the dashboard, no card surface. */
+  ha-card.transparent {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
   .title {
     font-size: 1.1rem;
     font-weight: 600;
-    margin: 4px 2px 0;
+    margin: 4px 2px 8px;
   }
 
-  .gauge {
+  .gauge,
+  .radar {
     width: 100%;
     max-width: 340px;
     margin: 0 auto;
   }
-  .gauge svg {
+  .gauge svg,
+  .radar svg {
     display: block;
     width: 100%;
     height: auto;
+  }
+  .radar {
+    margin-top: 4px;
   }
 
   .pill {
@@ -65,12 +77,48 @@ export const cardStyles = css`
     font-weight: 400;
   }
 
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .tile {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--aare-border);
+    border-radius: var(--aare-radius);
+    padding: 10px 12px;
+  }
+  .tile-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: var(--aare-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .tile-label .ico {
+    display: inline-flex;
+    color: #38bdf8;
+  }
+  .tile-value {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .tile-unit {
+    font-size: 0.82rem;
+    color: var(--aare-muted);
+    margin-left: 3px;
+  }
+
   .updated {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    margin-top: 10px;
+    margin-top: 12px;
     color: var(--aare-muted);
     font-size: 0.8rem;
   }

@@ -1,5 +1,5 @@
 // Keep CARD_VERSION in sync with package.json on release.
-export const CARD_VERSION = "1.0.0";
+export const CARD_VERSION = "1.1.0";
 export const CARD_TYPE = "aarestation-card";
 // The dashboard endpoint is cross-origin enabled and exposes the forecast
 // timeline + highscore needed for the "Beste Zeit heute" pill.

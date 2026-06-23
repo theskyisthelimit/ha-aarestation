@@ -9,9 +9,39 @@ export interface TimelineEntry {
 /** Subset of GET https://aarestation.ch/api/dashboard that the card consumes. */
 export interface DashboardData {
   pai: {
+    environmental_variables?: {
+      air_temp?: number;
+      air_temp_feels?: number;
+      wind_speed?: number;
+      humidity?: number;
+      uv_index?: number;
+      air_pressure_qnh?: number;
+      cloud_coverage?: number;
+      rain_today?: number;
+      wetter?: string;
+    };
+    aare_river_variables?: {
+      aareflow?: number;
+      aare_temp?: number;
+      aarelevel?: number;
+    };
+    air_quality?: {
+      aqi?: number;
+    };
+    parameters?: {
+      // Per-factor PAI sub-scores (0..10) used by the radar.
+      pai_parameters?: {
+        air_temp?: number;
+        wind_speed?: number;
+        humidity?: number;
+        aareflow?: number;
+        uv_index?: number;
+        aare_temp?: number;
+      };
+    };
     scores: {
       score: number; // current PAI score, 1..10
-      score_forecast: number;
+      score_forecast?: number;
     };
     system_info: {
       datetime: string; // "HH:MM" local time of last update
@@ -36,11 +66,14 @@ export interface BestTime {
 /** Lovelace card configuration. */
 export interface AarestationCardConfig {
   type: string;
-  title?: string; // optional header; omitted by default (gauge-only)
+  title?: string;
   update_interval?: number; // seconds
+  transparent?: boolean;
+  show_gauge?: boolean;
   show_best_time?: boolean;
   show_updated?: boolean;
-  api_url?: string;
+  show_radar?: boolean;
+  tiles?: string[]; // parameter keys to render as tiles
 }
 
 /** Minimal subset of the Home Assistant frontend object we rely on. */
