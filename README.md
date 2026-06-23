@@ -1,3 +1,5 @@
+<img src="images/icon.png" alt="Aarestation" width="96" align="right" />
+
 # Aarestation Card
 
 [![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz)
@@ -6,7 +8,6 @@ Eine Home-Assistant-Lovelace-Karte für **[aarestation.ch](https://aarestation.c
 
 Die Karte holt ihre Daten direkt von der API (`https://aarestation.ch/api/dashboard`) – **keine Integration, kein API-Key, keine Sensoren** nötig.
 
-![Vorschau](https://aarestation.ch/opengraph.png)
 
 ## Features
 
