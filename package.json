@@ -1,0 +1,36 @@
+{
+  "name": "aarestation-card",
+  "version": "1.0.0",
+  "description": "Home Assistant Lovelace card for aarestation.ch (Aare river swimming conditions in Bern)",
+  "type": "module",
+  "license": "MIT",
+  "author": "theskyisthelimit",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theskyisthelimit/ha-aarestation.git"
+  },
+  "keywords": [
+    "home-assistant",
+    "lovelace",
+    "custom-card",
+    "hacs",
+    "aare",
+    "aarestation"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "lit": "^3.2.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.3.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "rollup": "^4.34.6",
+    "tslib": "^2.8.1",
+    "typescript": "^5.7.3"
+  }
+}
