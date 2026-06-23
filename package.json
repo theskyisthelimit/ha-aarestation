@@ -1,6 +1,6 @@
 {
   "name": "aarestation-card",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Home Assistant Lovelace card for aarestation.ch (Aare river swimming conditions in Bern)",
   "type": "module",
   "license": "MIT",

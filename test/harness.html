@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>aarestation-card harness</title>
+    <style>
+      body { margin: 0; background: #333; }
+      #host { width: 400px; padding: 20px; }
+    </style>
+  </head>
+  <body>
+    <div id="host"></div>
+    <script type="module">
+      import "../dist/aarestation-card.js";
+      window.makeCard = (cfg) => {
+        const host = document.getElementById("host");
+        host.innerHTML = "";
+        const el = document.createElement("aarestation-card");
+        el.setConfig(cfg);
+        host.appendChild(el);
+        window.card = el;
+        return "ok";
+      };
+      window.inspect = () => {
+        const el = window.card;
+        if (!el || !el.shadowRoot) return { ready: false };
+        const sr = el.shadowRoot;
+        return {
+          ready: true,
+          hasData: !!el._data,
+          loading: el._loading,
+          error: el._error,
+          gauge: !!sr.querySelector(".gauge"),
+          radar: !!sr.querySelector(".radar"),
+          pill: !!sr.querySelector(".pill"),
+          tiles: sr.querySelectorAll(".tile").length,
+          updated: !!sr.querySelector(".updated"),
+          transparentClass: !!sr.querySelector("ha-card.transparent"),
+          config: el._config,
+        };
+      };
+    </script>
+  </body>
+</html>

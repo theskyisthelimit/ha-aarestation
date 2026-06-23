@@ -6,23 +6,18 @@ import { TILE_DEFS } from "./tiles";
 
 const TILE_OPTIONS = TILE_DEFS.map((d) => ({ value: d.key, label: d.label }));
 
+// Flat schema: every field is top-level so ha-form emits a flat value object.
 const SCHEMA = [
   { name: "title", selector: { text: {} } },
   {
     name: "update_interval",
     selector: { number: { min: MIN_UPDATE_INTERVAL, max: 3600, mode: "box", unit_of_measurement: "s" } },
   },
-  {
-    name: "appearance",
-    type: "grid",
-    schema: [
-      { name: "show_gauge", selector: { boolean: {} } },
-      { name: "show_radar", selector: { boolean: {} } },
-      { name: "show_best_time", selector: { boolean: {} } },
-      { name: "show_updated", selector: { boolean: {} } },
-      { name: "transparent", selector: { boolean: {} } },
-    ],
-  },
+  { name: "show_gauge", selector: { boolean: {} } },
+  { name: "show_radar", selector: { boolean: {} } },
+  { name: "show_best_time", selector: { boolean: {} } },
+  { name: "show_updated", selector: { boolean: {} } },
+  { name: "transparent", selector: { boolean: {} } },
   { name: "tiles", selector: { select: { multiple: true, mode: "list", options: TILE_OPTIONS } } },
 ];
 
@@ -40,16 +35,13 @@ const LABELS: Record<string, string> = {
 @customElement("aarestation-card-editor")
 export class AarestationCardEditor extends LitElement {
   @property({ attribute: false }) public hass?: HomeAssistant;
-  @state() private _config?: AarestationCardConfig;
+  @state() private _config: AarestationCardConfig = { type: "" };
 
   public setConfig(config: AarestationCardConfig): void {
     this._config = config;
   }
 
   protected render(): TemplateResult {
-    if (!this._config) {
-      return html``;
-    }
     const data = {
       show_gauge: true,
       show_radar: false,
@@ -71,7 +63,9 @@ export class AarestationCardEditor extends LitElement {
   }
 
   private _valueChanged(ev: CustomEvent): void {
-    const config = ev.detail.value as AarestationCardConfig;
+    ev.stopPropagation();
+    const config = { ...this._config, ...(ev.detail.value as AarestationCardConfig) };
+    this._config = config;
     this.dispatchEvent(
       new CustomEvent("config-changed", {
         detail: { config },
