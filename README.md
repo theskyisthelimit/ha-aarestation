@@ -1,8 +1,12 @@
-<img src="images/icon.png" alt="Aarestation" width="96" align="right" />
+<p align="center">
+  <img src="images/icon.png" alt="Aarestation" width="120" />
+</p>
 
-# Aarestation Card
+<h1 align="center">Aarestation Card</h1>
 
-[![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz)
+<p align="center">
+  <a href="https://hacs.xyz"><img src="https://img.shields.io/badge/HACS-Custom-41BDF5.svg" alt="HACS Custom" /></a>
+</p>
 
 Eine Home-Assistant-Lovelace-Karte für **[aarestation.ch](https://aarestation.ch)** – zeigt den **PAI-Score** der Aare in Bern als bekanntes Rainbow-Gauge, dazu die beste Badezeit heute.
 
