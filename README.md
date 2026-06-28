@@ -12,6 +12,12 @@ Eine Home-Assistant-Lovelace-Karte für **[aarestation.ch](https://aarestation.c
 
 Die Karte holt ihre Daten direkt von der API (`https://aarestation.ch/api/dashboard`) – **keine Integration, kein API-Key, keine Sensoren** nötig.
 
+> 🔌 **Lieber echte Sensoren?**
+> Die **[Aarestation Integration](https://github.com/theskyisthelimit/ha-aarestation-integration)**
+> liefert den PAI als `sensor.aarestation_pai` (State = Score, alle Werte als Attribute) –
+> server-seitig gepollt, nutzbar in Automationen, History und Statistik. Diese Karte
+> funktioniert auch ohne Integration; beides lässt sich kombinieren.
+
 
 ## Features
 
